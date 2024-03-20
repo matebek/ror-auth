@@ -1,0 +1,15 @@
+<div class="flex justify-center items-center h-full">
+  <div class="text-center">
+    <h1 class="text-4xl font-bold mb-4">Welcome abroad, <%= @auth.user.name %></h1>
+    <p class="text-lg">Get started by editing app/views/pages/welcome.html.erb</p>
+    <div class="mt-8">
+      <ul class="flex justify-center space-x-4">
+        <li>
+          <%= form_with url: logout_path, method: :delete do |form| %>
+            <%= render partial: "partials/form_submit", locals: { form: form, button_text: "Log out", button_type: "destroy" } %>
+          <% end %>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
