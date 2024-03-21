@@ -11,6 +11,12 @@ Rails.application.routes.draw do
   post "/signup" => "users#create"
   delete "/shutdown" => "users#destroy"
 
+  # Password reset routes
+  get "/password-reset", to: "password_resets#new", as: "new_password_reset"
+  post "/password-reset", to: "password_resets#create"
+  get "/password-reset/:token", to: "password_resets#edit", as: "edit_password_reset"
+  patch "/password-reset/:token", to: "password_resets#update"
+
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
