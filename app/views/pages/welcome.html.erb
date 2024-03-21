@@ -11,7 +11,7 @@
         </li>
         <li>
           <%= form_with url: shutdown_path, method: :delete do |form| %>
-            <%= render partial: 'partials/form_submit', locals: { form: form, button_text: "Delete your account", button_type: "destroy", button_options: { data: { turbo_confirm: "Are you sure? This action cannot be undone." } } } %>
+            <%= render partial: "partials/form_submit", locals: { form: form, button_text: "Delete your account", button_type: "destroy", button_options: { data: { turbo_confirm: "Are you sure? This action cannot be undone." } } } %>
           <% end %>
         </li>
       </ul>

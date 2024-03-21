@@ -2,10 +2,10 @@
   <% flash.each do |flash_type, message| %>
     <div class="p-4
     <%= case flash_type
-        when 'info' then 'bg-cyan-200 text-cyan-950'
-        when 'success' then 'bg-green-200 text-green-950'
-        when 'warning' then 'bg-yellow-200 text-yellow-950'
-        when 'error' then 'bg-red-200 text-red-950'
+        when "info" then "bg-cyan-200 text-cyan-950"
+        when "success" then "bg-green-200 text-green-950"
+        when "warning" then "bg-yellow-200 text-yellow-950"
+        when "error" then "bg-red-200 text-red-950"
     end %>">
       <%= message %>
     </div>
