@@ -9,10 +9,8 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-  <body class="h-full antialiased text-slate-900">
-    <div class="absolute left-0 right-0 opacity-90">
-      <%= render "partials/flash" %>
-    </div>
+  <body class="flex flex-col h-full antialiased text-slate-900 bg-gradient-to-r from-cyan-50 via-purple-50 to-pink-50">
+    <%= render "partials/flash" %>
     <%= yield %>
   </body>
 </html>
