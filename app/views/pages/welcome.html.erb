@@ -2,8 +2,19 @@
   <div class="text-center">
     <h1 class="text-4xl font-bold mb-4">Welcome abroad, <%= @auth.user.name %></h1>
     <p class="text-lg">Get started by editing app/views/pages/welcome.html.erb</p>
+    <div class="mt-8 bg-gray-800 rounded-lg p-4">
+      <div class="text-slate-400">Logged in user object</div>
+      <pre class="text-green-300"><%= JSON.pretty_generate(@auth.user.as_json) %></pre>
+    </div>
     <div class="mt-8">
       <ul class="flex justify-center space-x-4">
+        <% unless @auth.user.verified? %>
+          <li>
+            <%= form_with url: create_email_verification_path, method: :post do |form| %>
+              <%= render partial: 'partials/form_submit', locals: { form: form, button_text: "Resend verification email" } %>
+            <% end %>
+          </li>
+        <% end %>
         <li>
           <%= form_with url: logout_path, method: :delete do |form| %>
             <%= render partial: "partials/form_submit", locals: { form: form, button_text: "Log out", button_type: "destroy" } %>

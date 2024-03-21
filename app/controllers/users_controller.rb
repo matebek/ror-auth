@@ -11,6 +11,7 @@ class UsersController < ApplicationController
 
     if @user.save
       @auth.force_login(@user)
+      @user.send_verification_email
       redirect_to root_path, flash: { success: "User account created, happy hacking!" }
     else
       render :new, status: :unprocessable_entity

@@ -10,4 +10,17 @@ class User < ApplicationRecord
     # Last 10 characters of password salt, which changes when password is updated:
     password_salt&.last(10)
   end
+
+  generates_token_for :email_verification, expires_in: 1.week do
+    "#{self.email}_#{self.verified_at}"
+  end
+
+  def verified?
+    return self.verified_at.present?
+  end
+
+  def send_verification_email
+    token = generate_token_for(:email_verification)
+    UserMailer.email_verification_email(self, token).deliver_later
+  end
 end
