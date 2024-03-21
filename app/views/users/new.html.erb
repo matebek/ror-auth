@@ -1,0 +1,17 @@
+<% content_for :title, 'Sign up' %>
+<% content_for :footer do %>
+  <span class="text-sm">Already have an account?</span> <%= link_to "Log in", login_path, class: "text-cyan-500 hover:text-cyan-700 font-semibold" %>
+<% end %>
+<%= render layout: "layouts/auth" do %>
+  <%= form_with model: @user, url: signup_path, method: :post do |form| %>
+    <div class="flex flex-col gap-4">
+      <%= render partial: 'partials/form_field', locals: { model: @user, form: form, field_type: :text_field, attribute: :name, options: { placeholder: "Please enter your name", required: true } } %>
+      <%= render partial: 'partials/form_field', locals: { model: @user, form: form, field_type: :email_field, attribute: :email, options: { placeholder: "Please enter your email address", required: true } } %>
+      <%= render partial: 'partials/form_field', locals: { model: @user, form: form, field_type: :password_field, attribute: :password, options: { placeholder: "Please enter your password", required: true, minlength: 6 } } %>
+      <%= render partial: 'partials/form_field', locals: { model: @user, form: form, field_type: :password_field, attribute: :password_confirmation, options: { placeholder: "Please confirm your password", required: true, minlength: 6 } } %>
+    </div>
+    <div class="mt-6">
+      <%= render partial: "partials/form_submit", locals: { form: form, button_text: "Log in" } %>
+    </div>
+  <% end %>
+<% end %>

@@ -1,4 +1,7 @@
 <div>
   <%= form.label attribute, class: "text-gray-700 text-sm font-bold" %>
-  <%= send(field_type, form.object_name, attribute, class: "rounded w-full mt-2 py-2 px-3 text-gray-700 focus:ring-cyan-200 focus:border-cyan-200") %>
+  <% field_class = "rounded w-full mt-2 py-2 px-3 text-gray-700 focus:ring-cyan-200 focus:border-cyan-200" %>
+  <% field_class += " border-red-500" if model.errors.include?(attribute) %>
+  <%= send(field_type, form.object_name, attribute, options.merge({ class: field_class })) %>
+  <%= render 'partials/field_errors', errors: model.errors.full_messages_for(attribute) %>
 </div>
