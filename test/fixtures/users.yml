@@ -5,4 +5,4 @@ bob:
   email: bob@example.com
   password_digest: <%= BCrypt::Password.create("correct_password") %>
   remember_token:
-  verified_at: 2024-03-20 23:09:48
+  verified_at:

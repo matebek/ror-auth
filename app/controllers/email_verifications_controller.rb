@@ -14,7 +14,7 @@ class EmailVerificationsController < ApplicationController
     if user == @auth.user && user.update_attribute(:verified_at, Time.now)
       flash[:success] = "Email address verified."
     else
-      flash[:error] = "The email verification link has expired or invalid."
+      flash[:error] = "The email verification link has expired or invalid. Please request a new one."
     end
 
     redirect_to root_path
