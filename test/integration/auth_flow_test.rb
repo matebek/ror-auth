@@ -7,7 +7,6 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     # Assert that user session is created and remember token is not set
     assert_equal @user.id, session[:user_id]
     assert_nil cookies[:remember_token]
-
     # Assert that the landing page is displayed
     assert_select "h1", "Welcome aboard, Bob"
     assert_equal "Hello, friend. Access granted.", flash[:success]
@@ -36,7 +35,6 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     # Assert that user session is created and remember token is set
     assert_equal @user.id, session[:user_id]
     assert_not_nil cookies[:remember_token]
-
     # Assert that the landing page is displated
     assert_select "h1", "Welcome aboard, Bob"
     assert_equal "Hello, friend. Access granted.", flash[:success]
@@ -69,13 +67,12 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
 
     # Log the user out
     delete logout_path
+
     assert_redirected_to login_path
     follow_redirect!
-
     # Assert that user session tokens are cleared
     assert_nil session[:user_id]
     assert_empty cookies[:remember_token]
-
     # Assert that user is redirected to the login page
     assert_select "h1", "Log in"
     assert_equal "Disconnecting. Hope to see you again soon.", flash[:success]
