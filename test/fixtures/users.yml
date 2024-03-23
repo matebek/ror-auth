@@ -1,15 +1,8 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  name: MyString
-  email: MyString
-  password_digest: MyString
-  remember_token: MyString
-  verified_at: 2024-03-20 23:09:48
-
-two:
-  name: MyString
-  email: MyString
-  password_digest: MyString
-  remember_token: MyString
+bob:
+  name: Bob
+  email: bob@example.com
+  password_digest: <%= BCrypt::Password.create("correct_password") %>
+  remember_token:
   verified_at: 2024-03-20 23:09:48

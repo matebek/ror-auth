@@ -9,13 +9,13 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     assert_nil cookies[:remember_token]
 
     # Assert that the landing page is displayed after a successful login
-    assert_select "h1", "Welcome aboard, Test User"
+    assert_select "h1", "Welcome aboard, Bob"
   end
 
   test "user redirected to login with invalid session" do
     session = open_session
 
-    session.post login_path, params: { user: { email: @user.email, password: @user.password } }
+    session.post login_path, params: { user: @user_params }
     session.assert_redirected_to root_path
 
     # Reset the session and imiatate a new visit to the site
@@ -36,13 +36,13 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     assert_not_nil cookies[:remember_token]
 
     # Assert that the landing page is displated
-    assert_select "h1", "Welcome aboard, Test User"
+    assert_select "h1", "Welcome aboard, Bob"
   end
 
   test "user can be authenticated with remember token even after session reset" do
     session = open_session
 
-    session.post login_path, params: { user: { email: @user.email, password: @user.password, remember_me: "1" } }
+    session.post login_path, params: { user: { **@user_params, remember_me: "1" } }
     session.assert_redirected_to root_path
 
     old_remember_token = session.cookies[:remember_token]
@@ -54,7 +54,7 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
 
     # Assert that the user stays on the landing page
     session.assert_response :success
-    session.assert_select "h1", "Welcome aboard, Test User"
+    session.assert_select "h1", "Welcome aboard, Bob"
 
     # Assert that the user session is recreated
     session.assert_equal @user.id, session.session[:user_id]

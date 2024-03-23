@@ -11,12 +11,13 @@ module ActiveSupport
     fixtures :all
 
     setup do
-      @user = User.create(name: "Test User", email: "test@example.com", password: "correct_password")
+      @user = users(:bob)
+      @user_params = { email: @user.email, password: "correct_password" }
     end
 
     # Add more helper methods to be used by all tests here...
     def login(remember_me = false)
-      post login_path, params: { user: { email: @user.email, password: @user.password, remember_me: remember_me ? "1" : "0" } }
+      post login_path, params: { user: { **@user_params, remember_me: remember_me ? "1" : "0" } }
       assert_redirected_to root_path
       follow_redirect!
     end
