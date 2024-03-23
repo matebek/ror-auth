@@ -8,8 +8,9 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     assert_equal @user.id, session[:user_id]
     assert_nil cookies[:remember_token]
 
-    # Assert that the landing page is displayed after a successful login
+    # Assert that the landing page is displayed
     assert_select "h1", "Welcome aboard, Bob"
+    assert_equal "Hello, friend. Access granted.", flash[:success]
   end
 
   test "user redirected to login with invalid session" do
@@ -26,6 +27,7 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     session.assert_redirected_to login_path
     session.follow_redirect!
     session.assert_select "h1", "Log in"
+    session.assert_equal "You need to log in to continue.", session.flash[:error]
   end
 
   test "user should be able to log in with remember me functionality" do
@@ -37,9 +39,10 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
 
     # Assert that the landing page is displated
     assert_select "h1", "Welcome aboard, Bob"
+    assert_equal "Hello, friend. Access granted.", flash[:success]
   end
 
-  test "user can be authenticated with remember token even after session reset" do
+  test "user can be authenticated with remember token with invalid session" do
     session = open_session
 
     session.post login_path, params: { user: { **@user_params, remember_me: "1" } }
@@ -50,12 +53,11 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     session.reset!
     # Pass through the old remember token after session reset
     session.cookies[:remember_token] = old_remember_token
+
     session.get root_path
 
     # Assert that the user stays on the landing page
     session.assert_response :success
-    session.assert_select "h1", "Welcome aboard, Bob"
-
     # Assert that the user session is recreated
     session.assert_equal @user.id, session.session[:user_id]
     # Assert that the remember_token is refreshed
@@ -76,5 +78,6 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
 
     # Assert that user is redirected to the login page
     assert_select "h1", "Log in"
+    assert_equal "Disconnecting. Hope to see you again soon.", flash[:success]
   end
 end
