@@ -53,10 +53,12 @@ class AuthService
   end
 
   def user_for_remember_token
-    return if @cookies[:remember_token].blank?
+    # We don't need to perform any further checks if the remember_token does not exist
+    return nil if @cookies[:remember_token].blank?
 
     remember_token = @cookies.signed[:remember_token]
 
+    # If remember_token was tampered, we delete the cookie
     if remember_token.blank?
       @cookies.delete(:remember_token)
       return nil
@@ -65,8 +67,10 @@ class AuthService
     user = User.find_by(remember_token:)
 
     if user
+      # In case we were able to find the user, we generate a new token
       create_remembered_session_for_user(user)
     else
+      # In case we weren't able to find the user, we delete the cookie
       @cookies.delete(:remember_token)
     end
 
