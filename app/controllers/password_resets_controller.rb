@@ -36,7 +36,7 @@ class PasswordResetsController < ApplicationController
     @user = User.find_by_token_for(:password_reset, params[:token])
 
     if @user.nil?
-      redirect_to login_path, flash: { error: "The password reset link has expired. Please request a new one." }
+      redirect_to login_path, flash: { error: "The password reset link has expired or invalid. Please request a new one." }
     end
   end
 
