@@ -14,7 +14,7 @@ class UserAccountFlowTest < ActionDispatch::IntegrationTest
       assert_select "input[placeholder=?]", "Please enter your email address"
       assert_select "input[placeholder=?]", "Please enter your password"
       assert_select "input[placeholder=?]", "Please confirm your password"
-      assert_select 'input[type=?][value=?]', "submit", "Sign up"
+      assert_select "input[type=?][value=?]", "submit", "Sign up"
     end
   end
 

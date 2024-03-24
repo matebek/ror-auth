@@ -13,7 +13,7 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     assert_select "form[action=?]", login_path, method: :post do
       assert_select "input[placeholder=?]", "Please enter your email address"
       assert_select "input[placeholder=?]", "Please enter your password"
-      assert_select 'input[type=?][value=?]', "submit", "Log in"
+      assert_select "input[type=?][value=?]", "submit", "Log in"
     end
   end
 

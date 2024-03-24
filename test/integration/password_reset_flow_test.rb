@@ -13,7 +13,7 @@ class PasswordResetFlowTest < ActionDispatch::IntegrationTest
     assert_select "h1", "Forgot password"
     assert_select "form[action=?]", new_password_reset_path, method: :post do
       assert_select "input[placeholder=?]", "Please enter your email address"
-      assert_select 'input[type=?][value=?]', "submit", "Request reset link"
+      assert_select "input[type=?][value=?]", "submit", "Request reset link"
     end
   end
 
@@ -27,7 +27,7 @@ class PasswordResetFlowTest < ActionDispatch::IntegrationTest
     assert_select "form[action=?]", edit_password_reset_path(token), method: :patch do
       assert_select "input[placeholder=?]", "Please enter your password"
       assert_select "input[placeholder=?]", "Please confirm your password"
-      assert_select 'input[type=?][value=?]', "submit", "Reset password"
+      assert_select "input[type=?][value=?]", "submit", "Reset password"
     end
   end
 
