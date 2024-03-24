@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  before_action :init_authentication_service
+  before_action :auth
   before_action :redirect_if_not_authenticated
 
   def redirect_if_not_authenticated
@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
     redirect_to root_path, flash: { info: "Already in? Looks like you know your way around." } if @auth.user?
   end
 
-  def init_authentication_service
+  def auth
     @auth ||= AuthService.new(session, cookies)
   end
 end

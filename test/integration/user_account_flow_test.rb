@@ -25,7 +25,10 @@ class UserAccountFlowTest < ActionDispatch::IntegrationTest
     assert_select "h1", "Sign up"
 
     assert_difference("User.count") do
-      post signup_path, params: { user: { name: "Jane", email: "jane@example.com", password: "secret", password_confirmation: "secret" } }
+      post signup_path,
+           params: {
+             user: { name: "Jane", email: "jane@example.com", password: "secret", password_confirmation: "secret" }
+           }
 
       assert_redirected_to root_path
       follow_redirect!
@@ -36,7 +39,7 @@ class UserAccountFlowTest < ActionDispatch::IntegrationTest
     new_user = User.find_by(email: "jane@example.com")
     assert_equal new_user, new_user.authenticate("secret")
     assert new_user.verified_at.nil?, "User should not be verified immediately after registration"
-    assert_enqueued_email_with UserMailer, :email_verification_email, args: -> (args) { args[0] == new_user }
+    assert_enqueued_email_with UserMailer, :email_verification_email, args: ->(args) { args[0] == new_user }
   end
 
   test "should delete user account" do

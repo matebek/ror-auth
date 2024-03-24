@@ -11,7 +11,7 @@ class EmailVerificationsController < ApplicationController
   def update
     user = User.find_by_token_for(:email_verification, params[:token])
 
-    if user == @auth.user && user.update_attribute(:verified_at, Time.now)
+    if user == @auth.user && user.update_attribute(:verified_at, Time.now.utc)
       flash[:success] = "Email address verified."
     else
       flash[:error] = "The email verification link has expired or invalid. Please request a new one."

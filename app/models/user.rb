@@ -4,7 +4,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :password, length: { minimum: 6 } # The rest of the validation rules are inherited from has_secure_password
 
-  normalizes :email, with: -> email { email.strip.downcase }
+  normalizes :email, with: ->(email) { email.strip.downcase }
 
   generates_token_for :password_reset, expires_in: 15.minutes do
     # Last 10 characters of password salt, which changes when password is updated:
@@ -12,11 +12,11 @@ class User < ApplicationRecord
   end
 
   generates_token_for :email_verification, expires_in: 1.week do
-    "#{self.email}_#{self.verified_at}"
+    "#{email}_#{verified_at}"
   end
 
   def verified?
-    return self.verified_at.present?
+    verified_at.present?
   end
 
   def send_verification_email

@@ -6,9 +6,11 @@ class AuthServiceTest < ActiveSupport::TestCase
 
     # Stubbing session.destroy as ActionController::TestRequest
     # session returns a hash, not an instance of a Session.
+    # rubocop:disable Lint/NestedMethodDefinition
     def @session.destroy
       replace({})
     end
+    # rubocop:enable Lint/NestedMethodDefinition
 
     @cookies = ActionDispatch::TestRequest.new(Rails.application.env_config.deep_dup).cookie_jar
     @auth = AuthService.new(@session, @cookies)
@@ -25,13 +27,13 @@ class AuthServiceTest < ActiveSupport::TestCase
   end
 
   test "login should create remembered session for user if remember_me is true" do
-    assert @auth.login(@user, "correct_password", true)
+    assert @auth.login(@user, "correct_password", remember_me: true)
     assert_equal @user.id, @session[:user_id]
     assert_equal @user.remember_token, @cookies.signed[:remember_token]
   end
 
   test "user lookup using the remember_me cookie should regenerate the remember_token" do
-    assert @auth.login(@user, "correct_password", true)
+    assert @auth.login(@user, "correct_password", remember_me: true)
     old_remember_token = @cookies.signed[:remember_token]
 
     # Destroying the session forcing the @auth.user lookup to use the remember_token cookie
@@ -54,7 +56,7 @@ class AuthServiceTest < ActiveSupport::TestCase
   end
 
   test "logout should destroy session and delete remember_token" do
-    @auth.login(@user, "correct_password", true)
+    @auth.login(@user, "correct_password", remember_me: true)
     @auth.logout
     assert_nil @session[:user_id]
     assert_nil @cookies[:remember_token]

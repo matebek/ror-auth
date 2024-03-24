@@ -4,7 +4,7 @@ class AuthService
     @cookies = cookies
   end
 
-  def login(user, password, remember_me = false)
+  def login(user, password, remember_me: false)
     return false unless user.authenticate(password)
 
     if remember_me
@@ -27,7 +27,7 @@ class AuthService
   end
 
   def user
-    @user ||= get_user_for_session || get_user_for_remember_token
+    @user ||= user_for_session || user_for_remember_token
   end
 
   def user?
@@ -45,24 +45,24 @@ class AuthService
 
     remember_token = SecureRandom.urlsafe_base64
     @cookies.permanent.signed[:remember_token] = remember_token
-    user.update_attribute(:remember_token , remember_token)
+    user.update_attribute(:remember_token, remember_token)
   end
 
-  def get_user_for_session
+  def user_for_session
     User.find_by(id: @session[:user_id]) if @session[:user_id]
   end
 
-  def get_user_for_remember_token
-    return unless @cookies[:remember_token].present?
+  def user_for_remember_token
+    return if @cookies[:remember_token].blank?
 
     remember_token = @cookies.signed[:remember_token]
 
-    unless remember_token.present?
+    if remember_token.blank?
       @cookies.delete(:remember_token)
       return nil
     end
 
-    user = User.find_by(remember_token: remember_token)
+    user = User.find_by(remember_token:)
 
     if user
       create_remembered_session_for_user(user)

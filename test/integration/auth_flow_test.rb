@@ -46,7 +46,7 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
   end
 
   test "should log in with remember me functionality" do
-    login(true)
+    login(remember_me: true)
 
     # Assert that user session is created and remember token is set
     assert_equal @user.id, session[:user_id]
@@ -79,7 +79,7 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
   end
 
   test "should log out user and clear all session tokens" do
-    login(true)
+    login(remember_me: true)
 
     # Log the user out
     delete logout_path

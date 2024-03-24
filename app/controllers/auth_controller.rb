@@ -9,7 +9,7 @@ class AuthController < ApplicationController
   def create
     @user = User.find_or_initialize_by(email: user_params[:email])
 
-    if @auth.login(@user, user_params[:password], user_params[:remember_me] == "1")
+    if @auth.login(@user, user_params[:password], remember_me: user_params[:remember_me] == "1")
       redirect_to root_path, flash: { success: "Hello, friend. Access granted." }
     else
       flash.now[:error] = "Authentication failed. The provided credentials do not match our records."
