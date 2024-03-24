@@ -104,12 +104,8 @@ To get started with RoR Auth, follow these steps:
 
 ## Contributing
 
-Contributions to RoR Auth are welcome! Feel free to fork the repository, make changes, and submit pull requests.
+Contributions are welcome! Feel free to fork the repository, make changes, and submit pull requests.
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
----
-
-_This README is a work in progress and subject to changes and improvements._
