@@ -5,7 +5,7 @@ class AuthService
   end
 
   def login(user, password, remember_me = false)
-    return :failure unless user.authenticate(password)
+    return false unless user.authenticate(password)
 
     if remember_me
       create_remembered_session_for_user(user)
@@ -13,12 +13,12 @@ class AuthService
       create_session_for_user(user)
     end
 
-    :success
+    true
   end
 
   def force_login(user)
     create_session_for_user(user)
-    :success
+    true
   end
 
   def logout

@@ -14,24 +14,24 @@ class AuthServiceTest < ActiveSupport::TestCase
     @auth = AuthService.new(@session, @cookies)
   end
 
-  test "login should return :failure if authentication fails" do
-    assert_equal :failure, @auth.login(@user, "wrong_password")
+  test "login should return false if authentication fails" do
+    assert_not @auth.login(@user, "wrong_password")
   end
 
-  test "login should create session for user and return :success if authentication succeeds" do
-    assert_equal :success, @auth.login(@user, "correct_password")
+  test "login should create session for user and return true if authentication succeeds" do
+    assert @auth.login(@user, "correct_password")
     assert_equal @user.id, @session[:user_id]
     assert_nil @cookies.signed[:remember_token]
   end
 
   test "login should create remembered session for user if remember_me is true" do
-    assert_equal :success, @auth.login(@user, "correct_password", true)
+    assert @auth.login(@user, "correct_password", true)
     assert_equal @user.id, @session[:user_id]
     assert_equal @user.remember_token, @cookies.signed[:remember_token]
   end
 
   test "user lookup using the remember_me cookie should regenerate the remember_token" do
-    assert_equal :success, @auth.login(@user, "correct_password", true)
+    assert @auth.login(@user, "correct_password", true)
     old_remember_token = @cookies.signed[:remember_token]
 
     # Destroying the session forcing the @auth.user lookup to use the remember_token cookie
@@ -49,7 +49,7 @@ class AuthServiceTest < ActiveSupport::TestCase
   end
 
   test "force_login should create session for user" do
-    assert_equal :success, @auth.force_login(@user)
+    assert @auth.force_login(@user)
     assert_equal @user.id, @session[:user_id]
   end
 
