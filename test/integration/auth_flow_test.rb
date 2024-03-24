@@ -5,7 +5,19 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
   EXPECTED_LOGIN_ERROR_FLASH = "You need to log in to continue."
   EXPECTED_LOGOUT_SUCCESS_FLASH = "Disconnecting. Hope to see you again soon."
 
-  test "user should be able to log in" do
+  test "should access login form" do
+    get login_path
+
+    assert_response :success
+    assert_select "h1", "Log in"
+    assert_select "form[action=?]", login_path, method: :post do
+      assert_select "input[placeholder=?]", "Please enter your email address"
+      assert_select "input[placeholder=?]", "Please enter your password"
+      assert_select 'input[type=?][value=?]', "submit", "Log in"
+    end
+  end
+
+  test "should log in" do
     login
 
     # Assert that user session is created and remember token is not set
@@ -16,7 +28,7 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     assert_flash :success, EXPECTED_LOGIN_SUCCESS_FLASH
   end
 
-  test "user redirected to login with invalid session" do
+  test "should redirected to login with invalid session" do
     session = open_session
 
     session.post login_path, params: { user: @user_params }
@@ -33,7 +45,7 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     assert_flash :error, EXPECTED_LOGIN_ERROR_FLASH, session
   end
 
-  test "user should be able to log in with remember me functionality" do
+  test "should log in with remember me functionality" do
     login(true)
 
     # Assert that user session is created and remember token is set
@@ -44,7 +56,7 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     assert_flash :success, EXPECTED_LOGIN_SUCCESS_FLASH
   end
 
-  test "user can be authenticated with remember token with invalid session" do
+  test "should authenticate user using remember_token" do
     session = open_session
 
     session.post login_path, params: { user: { **@user_params, remember_me: "1" } }
@@ -66,7 +78,7 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     session.assert_not_equal old_remember_token, session.cookies[:remember_token]
   end
 
-  test "user should be able to log out and clear all session tokens" do
+  test "should log out user and clear all session tokens" do
     login(true)
 
     # Log the user out
