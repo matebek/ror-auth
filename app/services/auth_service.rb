@@ -5,7 +5,7 @@ class AuthService
   end
 
   def login(user, password, remember_me: false)
-    return false unless user.authenticate(password)
+    return false unless User.authenticate_by(email: user.email, password:)
 
     if remember_me
       create_remembered_session_for_user(user)
