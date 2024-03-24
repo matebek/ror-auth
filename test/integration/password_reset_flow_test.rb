@@ -2,9 +2,9 @@ require "test_helper"
 
 class PasswordResetFlowTest < ActionDispatch::IntegrationTest
   PASSWORD_RESET_TOKEN_TTL = 15.minutes
-  EXPECTED_PASSWORD_RESET_EMAIL_SENT_FLASH = "If the provided email address exists in our system, password reset instructions have been sent to it."
-  EXPECTED_PASSWORD_RESET_LINK_INVALID_FLASH = "The password reset link has expired or invalid. Please request a new one."
-  EXPECTED_PASSWORD_RESET_SUCCEEDED_FLASH = "Your password has been successfully reset."
+  EXPECTED_FORGOT_PASSWORD_SUCCESS_FLASH = "If the provided email address exists in our system, password reset instructions have been sent to it."
+  EXPECTED_PASSWORD_RESET_ERROR_FLASH = "The password reset link has expired or invalid. Please request a new one."
+  EXPECTED_PASSWORD_RESET_SUCCESS_FLASH = "Your password has been successfully reset."
 
   test "should access forgot password form" do
     get new_password_reset_path
@@ -38,8 +38,7 @@ class PasswordResetFlowTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to login_path
     follow_redirect!
-    assert_equal EXPECTED_PASSWORD_RESET_LINK_INVALID_FLASH, flash[:error]
-    assert_select "div", EXPECTED_PASSWORD_RESET_LINK_INVALID_FLASH
+    assert_flash :error, EXPECTED_PASSWORD_RESET_ERROR_FLASH
   end
 
   test "should redirect to the login page when accessing the password reset form with an expired token" do
@@ -51,8 +50,7 @@ class PasswordResetFlowTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to login_path
     follow_redirect!
-    assert_equal EXPECTED_PASSWORD_RESET_LINK_INVALID_FLASH, flash[:error]
-    assert_select "div", EXPECTED_PASSWORD_RESET_LINK_INVALID_FLASH
+    assert_flash :error, EXPECTED_PASSWORD_RESET_ERROR_FLASH
   end
 
   test "should request password reset email" do
@@ -60,8 +58,7 @@ class PasswordResetFlowTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to login_path
     follow_redirect!
-    assert_equal EXPECTED_PASSWORD_RESET_EMAIL_SENT_FLASH, flash[:success]
-    assert_select "div", EXPECTED_PASSWORD_RESET_EMAIL_SENT_FLASH
+    assert_flash :success, EXPECTED_FORGOT_PASSWORD_SUCCESS_FLASH
     assert_enqueued_email_with UserMailer, :password_reset_email, args: -> (args) { args[0] == @user }
   end
 
@@ -70,8 +67,7 @@ class PasswordResetFlowTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to login_path
     follow_redirect!
-    assert_equal EXPECTED_PASSWORD_RESET_EMAIL_SENT_FLASH, flash[:success]
-    assert_select "div", EXPECTED_PASSWORD_RESET_EMAIL_SENT_FLASH
+    assert_flash :success, EXPECTED_FORGOT_PASSWORD_SUCCESS_FLASH
     assert_enqueued_emails 0
   end
 
@@ -82,8 +78,7 @@ class PasswordResetFlowTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to login_path
     follow_redirect!
-    assert_equal EXPECTED_PASSWORD_RESET_SUCCEEDED_FLASH, flash[:success]
-    assert_select "div", EXPECTED_PASSWORD_RESET_SUCCEEDED_FLASH
+    assert_flash :success, EXPECTED_PASSWORD_RESET_SUCCESS_FLASH
   end
 
   test "should redirect to the login page when submitting the password reset form with an invalid token" do
@@ -93,8 +88,7 @@ class PasswordResetFlowTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to login_path
     follow_redirect!
-    assert_equal EXPECTED_PASSWORD_RESET_LINK_INVALID_FLASH, flash[:error]
-    assert_select "div", EXPECTED_PASSWORD_RESET_LINK_INVALID_FLASH
+    assert_flash :error, EXPECTED_PASSWORD_RESET_ERROR_FLASH
   end
 
   test "should redirect to the login page when submitting the password reset form with an expired token" do
@@ -107,7 +101,6 @@ class PasswordResetFlowTest < ActionDispatch::IntegrationTest
 
     assert_redirected_to login_path
     follow_redirect!
-    assert_equal EXPECTED_PASSWORD_RESET_LINK_INVALID_FLASH, flash[:error]
-    assert_select "div", EXPECTED_PASSWORD_RESET_LINK_INVALID_FLASH
+    assert_flash :error, EXPECTED_PASSWORD_RESET_ERROR_FLASH
   end
 end

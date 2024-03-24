@@ -1,6 +1,9 @@
 require "test_helper"
 
 class UserAccountFlowTest < ActionDispatch::IntegrationTest
+  EXPECTED_USER_ACCOUNT_CREATED_SUCCESS_FLASH = "User account created, happy hacking!"
+  EXPECTED_USER_ACCOUNT_DELETED_SUCCESS_FLASH = "Your account has been deleted. See you on the other side."
+
   test "user should be able to sign up" do
     get signup_path
 
@@ -13,7 +16,7 @@ class UserAccountFlowTest < ActionDispatch::IntegrationTest
       assert_redirected_to root_path
       follow_redirect!
       assert_select "h1", "Welcome aboard, Jane"
-      assert_equal "User account created, happy hacking!", flash[:success]
+      assert_flash :success, EXPECTED_USER_ACCOUNT_CREATED_SUCCESS_FLASH
     end
 
     new_user = User.find_by(email: "jane@example.com")
@@ -32,7 +35,7 @@ class UserAccountFlowTest < ActionDispatch::IntegrationTest
       assert_redirected_to login_path
       follow_redirect!
       assert_select "h1", "Log in"
-      assert_equal "Your account has been deleted. See you on the other side.", flash[:success]
+      assert_flash :success, EXPECTED_USER_ACCOUNT_DELETED_SUCCESS_FLASH
     end
 
     assert_nil User.find_by(id: @user.id), "User should be deleted"

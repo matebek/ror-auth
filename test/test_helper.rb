@@ -21,5 +21,14 @@ module ActiveSupport
       assert_redirected_to root_path
       follow_redirect!
     end
+
+    def assert_flash(type, message, session = nil)
+      _flash = session ? session.flash : flash
+      _assert_equal = session ? session.method(:assert_equal) : method(:assert_equal)
+      _assert_select = session ? session.method(:assert_select) : method(:assert_select)
+
+      _assert_equal.call(message, _flash[type])
+      _assert_select.call("div", message)
+    end
   end
 end

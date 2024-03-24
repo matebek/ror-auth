@@ -1,6 +1,10 @@
 require "test_helper"
 
 class AuthFlowTest < ActionDispatch::IntegrationTest
+  EXPECTED_LOGIN_SUCCESS_FLASH = "Hello, friend. Access granted."
+  EXPECTED_LOGIN_ERROR_FLASH = "You need to log in to continue."
+  EXPECTED_LOGOUT_SUCCESS_FLASH = "Disconnecting. Hope to see you again soon."
+
   test "user should be able to log in" do
     login
 
@@ -9,7 +13,7 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     assert_nil cookies[:remember_token]
     # Assert that the landing page is displayed
     assert_select "h1", "Welcome aboard, Bob"
-    assert_equal "Hello, friend. Access granted.", flash[:success]
+    assert_flash :success, EXPECTED_LOGIN_SUCCESS_FLASH
   end
 
   test "user redirected to login with invalid session" do
@@ -26,7 +30,7 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     session.assert_redirected_to login_path
     session.follow_redirect!
     session.assert_select "h1", "Log in"
-    session.assert_equal "You need to log in to continue.", session.flash[:error]
+    assert_flash :error, EXPECTED_LOGIN_ERROR_FLASH, session
   end
 
   test "user should be able to log in with remember me functionality" do
@@ -37,7 +41,7 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     assert_not_nil cookies[:remember_token]
     # Assert that the landing page is displated
     assert_select "h1", "Welcome aboard, Bob"
-    assert_equal "Hello, friend. Access granted.", flash[:success]
+    assert_flash :success, EXPECTED_LOGIN_SUCCESS_FLASH
   end
 
   test "user can be authenticated with remember token with invalid session" do
@@ -75,6 +79,6 @@ class AuthFlowTest < ActionDispatch::IntegrationTest
     assert_empty cookies[:remember_token]
     # Assert that user is redirected to the login page
     assert_select "h1", "Log in"
-    assert_equal "Disconnecting. Hope to see you again soon.", flash[:success]
+    assert_flash :success, EXPECTED_LOGOUT_SUCCESS_FLASH
   end
 end
