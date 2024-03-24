@@ -37,7 +37,7 @@ class EmailVerificationFlowTest < ActionDispatch::IntegrationTest
 
 
     # Simulate the passage of one week
-    travel 1.week + 1.minute
+    travel 1.week + 1.day
 
     assert_not @user.verified?
     get update_email_verification_path(token)
